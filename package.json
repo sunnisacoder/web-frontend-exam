@@ -39,6 +39,7 @@
     ]
   },
   "devDependencies": {
-    "miragejs": "^0.1.48"
+    "miragejs": "^0.1.48",
+    "sass": "^1.91.0"
   }
 }
