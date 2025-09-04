@@ -1,0 +1,309 @@
+.banner {
+    width: 100%;
+    height: 823px;
+    max-width: 1920px;
+    position: relative;
+
+    @media (max-width: 1080px) {
+        height: 57.68vw;
+    }
+    @media (max-width: 475px) {
+        height: 238px;
+    }
+
+    picture {
+        width: 100%;
+        height: 100%;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .logoBox {
+        position: absolute;
+        top: 350px;
+        right: 83px;
+        width: 100%;
+        height: 100%;
+        min-width: 137px;
+        max-width: 540px;
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+
+        :nth-child(1) {
+            display: flex;
+            @media (max-width: 1080px) {
+                display: none;
+            }
+        }
+
+        :nth-child(2) {
+            display: none;
+            @media (max-width: 1080px) {
+                display: flex;
+            }
+        }
+    }
+
+    .characterBox {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        min-width: 317px;
+        max-width: 1097px;
+        .characterBoxInner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            // min-width: 317px;
+            // max-width: 1097px;
+            @media (max-width: 1080px) {
+                display: none;
+            }
+        }
+        .characterBack {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            height: 100%;
+            object-fit: contain;
+        }
+        .character {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            height: 100%;
+            object-fit: contain;
+        }
+        .eyeBox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+        .leftEye {
+            position: absolute;
+            top: 307px;
+            left: 582px;
+            z-index: 2;
+            width: 40px;
+            height: 32px;
+        }
+        .rightEye {
+            position: absolute;
+            top: 302px;
+            left: 729px;
+            z-index: 2;
+            width: 40px;
+            height: 32px;
+        }
+        .characterMobile {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            width: 100%;
+            max-width: 823px;
+            height: 100%;
+            img {
+                height: 100%;
+                object-fit: contain;
+            }
+            //換到行動裝置就單純是一張圖
+            @media (min-width: 1080px) {
+                display: none;
+            }
+        }
+    }
+}
+
+.jobArea {
+    margin: -123px 0 auto;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding-left: 28px;
+    padding-right: 28px;
+    padding-bottom: 20px;
+    @media (max-width: 1080px) {
+        padding-bottom: 20px;
+        padding-left: 0;
+        padding-right: 0;
+        margin-top: auto;
+    }
+
+    .inner {
+        width: 100%;
+        // max-width: 1384px;
+        height: 632px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 12px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        @media (max-width: 1080px) {
+            border-radius: 0;
+            height: auto;
+        }
+    }
+
+    h1 {
+        font-size: 1.44rem;
+        font-weight: 700;
+        line-height: 1.25;
+        color: #4d4d4d;
+        position: relative;
+        padding-left: 20px;
+        &::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 4px;
+            height: 16px;
+            background-color: #ee8927;
+            border-radius: 4px;
+            transform: translateY(-50%);
+        }
+    }
+
+    .filterBox {
+        display: flex;
+        width: 100%;
+        // max-width: 1336px;
+        height: 56px;
+        gap: 20px;
+        @media (max-width: 1080px) {
+            flex-direction: column;
+            height: auto;
+        }
+        .inputBox {
+            position: relative;
+            width: 48.4vw; //647px/1336px
+            &::before {
+                content: "公司名稱";
+                color: #4d4d4d;
+                background-color: #fff;
+                padding-left: 3px;
+                padding-right: 3px;
+                position: absolute;
+                top: -7px;
+                left: 16px;
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 1.25;
+            }
+            input {
+                width: 100%;
+                padding-left: 12px;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 1.25;
+                color: #4d4d4d;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                height: 100%;
+            }
+        }
+        .selectBox {
+            width: 19.68vw; //263px/1336px
+            position: relative;
+            &:nth-of-type(2) {
+                &::before {
+                    content: "教育程度";
+                    color: #4d4d4d;
+                    background-color: #fff;
+                    padding-left: 3px;
+                    padding-right: 3px;
+                    position: absolute;
+                    top: -7px;
+                    left: 16px;
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 1.25;
+                }
+            }
+            &:nth-of-type(3) {
+                &::before {
+                    content: "薪水範圍";
+                    color: #4d4d4d;
+                    background-color: #fff;
+                    padding-left: 3px;
+                    padding-right: 3px;
+                    position: absolute;
+                    top: -7px;
+                    left: 16px;
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 1.25;
+                }
+            }
+            select {
+                width: 100%;
+                height: 100%;
+                padding-left: 12px;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 1.25;
+                color: #4d4d4d;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+        }
+        button {
+            width: 8.08vw; //108px/1336px
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.25;
+            color: #fff;
+            background-color: #999999;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition:
+                background-color 0.5s ease,
+                color 0.3s ease;
+            &:hover {
+                background-color: #fff;
+                color: #999999;
+                border: 1px solid #999999;
+            }
+        }
+
+        @media (max-width: 1080px) {
+            input,
+            select,
+            button {
+                width: 100%;
+                height: 56px;
+            }
+        }
+    }
+    .jobData {
+        width: 100%;
+        // max-width: 1336px;
+        height: 458px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .noData {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.25;
+            color: #999999;
+        }
+    }
+}
