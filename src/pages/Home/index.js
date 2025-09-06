@@ -3,16 +3,67 @@ import './styles.scss';
 import background from '../../images/background.png';
 import logo from '../../images/logo.svg';
 import logoMobile from '../../images/logo-mobile.svg';
-
 import character from '../../images/character.png';
 import characterBack from '../../images/character-back.png';
 import leftEye from '../../images/left-eye.png';
 import rightEye from '../../images/right-eye.png';
 import characterMobile from '../../images/character-mobile.png';
+import JobItem from './JobItem';
+import prev from '../../images/prev.svg';
+import next from '../../images/next.svg';
+
 
 function Home() {
   const [educationLevels, setEducationLevels] = useState([]);
   const [salaryLevels, setSalaryLevels] = useState([]);
+  const [jobLists, setJobLists] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(6);
+
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      if (window.innerWidth <= 1080) {
+        setItemsPerPage(4); // 行動裝置顯示 4 筆
+      } else {
+        setItemsPerPage(6); // 電腦顯示 6 筆
+      }
+    };
+    updateItemsPerPage(); // 設定初始值
+    window.addEventListener('resize', updateItemsPerPage); // 監聽 resize 事件
+    return () => window.removeEventListener('resize', updateItemsPerPage);
+  }, []);
+
+  const totalPages = Math.ceil(jobLists.length / itemsPerPage); // 總頁數
+  const currentJobs = jobLists.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+  // 上一頁
+  const goToPrevPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+  // 下一頁
+  const goToNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  };
+  // 全部頁碼
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <li
+          key={i}
+          className={currentPage === i ? 'active' : ''}
+          onClick={() => setCurrentPage(i)}
+        >
+          {i}
+        </li>
+      );
+    }
+
+    return pageNumbers;
+};
 
   useEffect(() => {
     fetch('/api/v1/educationLevelList')
@@ -24,7 +75,17 @@ function Home() {
     fetch('/api/v1/salaryLevelList')
       .then(response => response.json())
       .then(data => setSalaryLevels(data))
-      .catch(error => console.error('Error fetching education levels:', error));
+      .catch(error => console.error('Error fetching salary levels:', error));
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/v1/jobs')
+      .then(response => response.json())
+      .then(result => {
+        // result.data 職缺陣列
+        setJobLists(result.data || []);
+      })
+      .catch(error => console.error('Error fetching job lists:', error));
   }, []);
 
   return (
@@ -55,8 +116,9 @@ function Home() {
           </div>
         </div>
       </div>
+
       <div className="jobArea">
-        <div className="inner">
+        <div className="inner" >
             <h1>適合前端工程師的好工作</h1>
             <div className="filterBox">
                 <div className="inputBox">
@@ -84,9 +146,41 @@ function Home() {
                 </div>
                 <button>條件搜尋</button>
             </div>
-            <div className="jobData">
-              <p className="noData">無資料</p>
-            </div>
+            <div className="jobData" style={{ border: jobLists.length === 0 ? '1px solid #ccc' : 'none' }}>
+              {jobLists.length === 0 ? (
+                <p className="noData">無資料</p>
+              ) : (
+              <div className="jobList">
+                <div className="jobBox">
+                  {currentJobs.map(job => (
+                    <JobItem
+                      key={job.id}
+                      companyName={job.companyName}
+                      title={job.jobTitle}
+                      education={`教育ID: ${job.educationId}`}
+                      salary={`薪水ID: ${job.salaryId}`}
+                      description={job.preview}
+                    />
+                  ))}
+                </div>
+              </div>
+              )}
+            </div>  
+            <ul className="pagination">
+              <li 
+                className={`prev ${currentPage === 1 ? 'disabled' : ''}`}
+                onClick={() => goToPrevPage()}
+              >
+                <img src={prev} alt="prev" />
+              </li>
+              {renderPageNumbers()}
+              <li 
+                className={`next ${currentPage === totalPages ? 'disabled' : ''}`}
+                onClick={() => goToNextPage()}
+              >
+                <img src={next} alt="next" />
+              </li>
+            </ul>
         </div>
       </div>
     </div>
