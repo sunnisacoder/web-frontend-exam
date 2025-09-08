@@ -12,11 +12,12 @@ import JobItem from './JobItem';
 import prev from '../../images/prev.svg';
 import next from '../../images/next.svg';
 
-
 function Home() {
   const [educationLevels, setEducationLevels] = useState([]);
   const [salaryLevels, setSalaryLevels] = useState([]);
   const [jobLists, setJobLists] = useState([]);
+  const [jobDetail, setJobDetail] = useState([]);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(6);
 
@@ -87,6 +88,16 @@ function Home() {
       })
       .catch(error => console.error('Error fetching job lists:', error));
   }, []);
+
+  const fetchJobDetail = (jobId) => {
+    fetch(`/api/v1/jobs/${jobId}`)
+      .then(response => response.json())
+      .then(result => {
+        setJobDetail(result);
+        setIsPopupVisible(true);
+      })
+      .catch(error => console.error('Error fetching job detail:', error));
+  };
 
   return (
     <div className="wrapper">
@@ -160,6 +171,7 @@ function Home() {
                       education={`教育ID: ${job.educationId}`}
                       salary={`薪水ID: ${job.salaryId}`}
                       description={job.preview}
+                      onViewDetail={() => fetchJobDetail(job.id)}
                     />
                   ))}
                 </div>
@@ -181,6 +193,43 @@ function Home() {
                 <img src={next} alt="next" />
               </li>
             </ul>
+        </div>
+      </div>
+
+      <div className={`popUpArea ${isPopupVisible ? 'visible' : ''}`}>
+        <div className="popUpBox">
+          <div className="popUpTitle">
+            <p>詳細資訊</p>
+          </div>
+            {jobDetail && (
+            <div className="popUpContent">
+              <div className="jobTitle">
+                <p className="companyName">{jobDetail.companyName}</p>
+                <p className="title">{jobDetail.jobTitle}</p>
+              </div>
+              <div className="album">
+                <div className="albumBox">
+                  {jobDetail.companyPhoto && jobDetail.companyPhoto.map((photo, index) => (
+                    <img key={index} src={photo} alt="" />
+                  ))}
+                </div>
+                <div className="processBox">
+                  <div className="process">
+                    <div className="dot active"></div>
+                    <div className="dot"></div>
+                    <div className="dot"></div>
+                  </div>
+                </div>
+              </div>
+              <div className="jobContent">
+                <span>工作內容</span>
+                <div className="content" dangerouslySetInnerHTML={{__html: jobDetail.description}} />
+              </div>
+            </div>
+            )}
+          <div className="popUpClose" onClick={() => setIsPopupVisible(false)}>
+            <p>關閉</p>
+          </div>
         </div>
       </div>
     </div>

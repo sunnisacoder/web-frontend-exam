@@ -3,9 +3,12 @@ import titleImg from '../../images/titleImg.svg';
 import educationImg from '../../images/educationImg.svg';
 import salaryImg from '../../images/salaryImg.svg';
 
-const JobItem = ({ companyName, title, education, salary, description }) => {
+const JobItem = ({ companyName, title, education, salary, description, onViewDetail }) => {
   return (
-    <div className="jobItem">
+    <div className="jobItem" onClick={(e) => {
+      e.preventDefault();
+      onViewDetail();
+    }}>
       <p className="companyName">{companyName}</p>
       <div className="information">
         <div className="title">
@@ -25,7 +28,7 @@ const JobItem = ({ companyName, title, education, salary, description }) => {
         <p>{description}</p>
       </div>
       <div className="detailBtn">
-        <a href="">查看細節</a>
+        <a href="#" >查看細節</a>
       </div>
     </div>
   );

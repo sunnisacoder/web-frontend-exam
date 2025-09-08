@@ -9,4 +9,5 @@
 
 🦖 專案遇到的困難、問題及解決方法
     頁碼 render ／ 手機版頁數和資料數量
+    popUpArea / html ／一直沒有成功撈到  education / salary 的資料
 
