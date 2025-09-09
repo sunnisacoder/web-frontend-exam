@@ -59,3 +59,6 @@
 4. 篩選功能與資料整合
    - 問題描述：一直無法成功撈到教育和薪水到 jobItem
    - 解決方案：竟然選到空陣列 QAQ
+
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+部署網址：https://sunnisacoder.github.io/web-frontend-exam/
