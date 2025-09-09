@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './styles.scss';
+
 import background from '../../images/background.png';
 import logo from '../../images/logo.svg';
 import logoMobile from '../../images/logo-mobile.svg';
@@ -50,6 +51,17 @@ function Home() {
     window.addEventListener('resize', updateItemsPerPage); // 監聽 resize 事件
     return () => window.removeEventListener('resize', updateItemsPerPage);
   }, []);
+
+  useEffect(() => {
+    if (isPopupVisible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isPopupVisible]);
 
   useEffect(() => {
     const scene = document.getElementById('eyeScene');
@@ -258,7 +270,7 @@ function Home() {
               <div className="album">
                 <Swiper
                   modules={[Pagination, Autoplay]}
-                  spaceBetween={0}
+                  spaceBetween={8}
                   slidesPerView={2.75}
                   pagination={{
                     clickable: true,
@@ -284,6 +296,8 @@ function Home() {
                     },
                     0: {
                       slidesPerView: 1.25,
+                      spaceBetween: 8,
+
                     },
                   }}
                   className="albumBox"
