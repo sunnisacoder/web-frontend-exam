@@ -16,11 +16,15 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import parallax from 'parallax-js';
+import educationListData from '../../constants/educationList';
+import jobListData from '../../constants/jobList';
+import salaryListData from '../../constants/salaryList';
+
 
 function Home() {
-  const [educationLevels, setEducationLevels] = useState([]);
-  const [salaryLevels, setSalaryLevels] = useState([]);
-  const [jobLists, setJobLists] = useState([]);
+  const [educationLevels, setEducationLevels] = useState(educationListData);
+  const [salaryLevels, setSalaryLevels] = useState(salaryListData);
+  const [jobLists, setJobLists] = useState(jobListData);
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [jobDetail, setJobDetail] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -32,6 +36,8 @@ function Home() {
     salaryLevel: ''
   });
   
+
+
   useEffect(() => {
     const updateItemsPerPage = () => {
       if (window.innerWidth <= 1080) {
@@ -91,29 +97,6 @@ function Home() {
     return pageNumbers;
 };
 
-  useEffect(() => {
-    fetch('/api/v1/educationLevelList')
-      .then(response => response.json())
-      .then(data => setEducationLevels(data))
-      .catch(error => console.error('Error fetching education levels:', error));
-  }, []);
-  useEffect(() => {
-    fetch('/api/v1/salaryLevelList')
-      .then(response => response.json())
-      .then(data => setSalaryLevels(data))
-      .catch(error => console.error('Error fetching salary levels:', error));
-  }, []);
-
-  useEffect(() => {
-    fetch('/api/v1/jobs')
-      .then(response => response.json())
-      .then(result => {
-        // result.data 職缺陣列
-        setJobLists(result.data || []);
-        setFilteredJobs([]);
-      })
-      .catch(error => console.error('Error fetching job lists:', error));
-  }, []);
 
   const handleSearch = () => {
     const filtered = jobLists.filter(job => {
@@ -121,10 +104,10 @@ function Home() {
         job.companyName.toLowerCase().includes(filters.companyName.toLowerCase());
       
       const matchEducation = !filters.educationLevel || 
-        job.educationLevels === parseInt(filters.educationLevel);
+        job.educationId === parseInt(filters.educationLevel);
       
       const matchSalary = !filters.salaryLevel || 
-        job.salaryLevels === parseInt(filters.salaryLevel);
+        job.salaryId === parseInt(filters.salaryLevel);
 
       return matchCompany && matchEducation && matchSalary;
     });
@@ -134,13 +117,11 @@ function Home() {
   };
 
   const fetchJobDetail = (jobId) => {
-    fetch(`/api/v1/jobs/${jobId}`)
-      .then(response => response.json())
-      .then(result => {
-        setJobDetail(result);
-        setIsPopupVisible(true);
-      })
-      .catch(error => console.error('Error fetching job detail:', error));
+    const job = filteredJobs[jobId];
+    if (job) {
+      setJobDetail(job);
+      setIsPopupVisible(true);
+    }
   };
   
 
@@ -227,17 +208,20 @@ function Home() {
               ) : (
               <div className="jobList">
                 <div className="jobBox">
-                  {currentJobs.map(job => (
-                    <JobItem
-                      key={job.id}
-                      companyName={job.companyName}
-                      title={job.jobTitle}
-                      education={educationLevels.find(level => level.id === job.educationLevels)?.label || '不限'}
-                      salary={salaryLevels.find(salary => salary.id === job.salaryLevels)?.label || '不限'}
-                      description={job.preview}
-                      onViewDetail={() => fetchJobDetail(job.id)}
-                    />
-                  ))}
+                  {currentJobs.map((job, index) => {
+                    const actualIndex = (currentPage - 1) * itemsPerPage + index;
+                    return (
+                      <JobItem
+                        key={actualIndex}
+                        companyName={job.companyName}
+                        title={job.jobTitle}
+                        education={educationLevels.find(edu => edu.id === job.educationId)?.label || job.educationId}
+                        salary={salaryLevels.find(salary => salary.id === job.salaryId)?.label || job.salaryId}
+                        description={job.preview}
+                        onViewDetail={() => fetchJobDetail(actualIndex)}
+                      />
+                    );
+                  })}
                 </div>
               </div>
               )}
