@@ -11,6 +11,11 @@ import characterMobile from '../../images/character-mobile.png';
 import JobItem from './JobItem';
 import prev from '../../images/prev.svg';
 import next from '../../images/next.svg';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import parallax from 'parallax-js';
 
 function Home() {
   const [educationLevels, setEducationLevels] = useState([]);
@@ -20,6 +25,7 @@ function Home() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(6);
+  
 
   useEffect(() => {
     const updateItemsPerPage = () => {
@@ -32,6 +38,20 @@ function Home() {
     updateItemsPerPage(); // 設定初始值
     window.addEventListener('resize', updateItemsPerPage); // 監聽 resize 事件
     return () => window.removeEventListener('resize', updateItemsPerPage);
+  }, []);
+
+  useEffect(() => {
+    const scene = document.getElementById('eyeScene');
+    const parallaxInstance = new parallax(scene, {
+      relativeInput: true,
+      hoverOnly: true,
+      scalarX: 3,
+      scalarY: 3
+    });
+
+    return () => {
+      parallaxInstance.destroy();
+    };
   }, []);
 
   const totalPages = Math.ceil(jobLists.length / itemsPerPage); // 總頁數
@@ -98,6 +118,7 @@ function Home() {
       })
       .catch(error => console.error('Error fetching job detail:', error));
   };
+  
 
   return (
     <div className="wrapper">
@@ -119,8 +140,12 @@ function Home() {
           <div className="characterBoxInner">
             <img className="character" src={character} alt="character" />
             <img className="characterBack" src={characterBack} alt="characterBack" />
-            <img className="leftEye" src={leftEye} alt="leftEye" />
-            <img className="rightEye" src={rightEye} alt="rightEye" />
+            <div id="eyeScene">
+              <div data-depth="0.08">
+                <img className="leftEye" src={leftEye} alt="leftEye" />
+                <img className="rightEye" src={rightEye} alt="rightEye" />
+              </div>
+            </div>
           </div>
           <div className="characterMobile">
               <img src={characterMobile} alt="characterMobile" />
@@ -168,8 +193,8 @@ function Home() {
                       key={job.id}
                       companyName={job.companyName}
                       title={job.jobTitle}
-                      education={`教育ID: ${job.educationId}`}
-                      salary={`薪水ID: ${job.salaryId}`}
+                      education={educationLevels.find(level => level.id === jobLists.educationLevels)?.label || '不限'}
+                      salary={salaryLevels.find(salary => salary.id === jobLists.salaryLevels)?.label || '不限'}
                       description={job.preview}
                       onViewDetail={() => fetchJobDetail(job.id)}
                     />
@@ -208,14 +233,47 @@ function Home() {
                 <p className="title">{jobDetail.jobTitle}</p>
               </div>
               <div className="album">
-                <div className="albumBox">
+                <Swiper
+                  modules={[Pagination, Autoplay]}
+                  spaceBetween={0}
+                  slidesPerView={2.75}
+                  pagination={{
+                    clickable: true,
+                    el: '.process',
+                    bulletClass: 'dot',
+                    bulletActiveClass: 'active'
+                  }}
+                  autoplay={{
+                    delay: 2000,
+                    disableOnInteraction: false, // 滑動後仍然自動播放
+                  }}
+                  breakpoints={{
+                    750: {
+                      slidesPerView: 2.75,
+                    },
+                    550: {
+                      slidesPerView: 2.5,
+                      spaceBetween: 8,
+                    },
+                    450: {
+                      slidesPerView: 1.8,
+                      spaceBetween: 8,
+                    },
+                    0: {
+                      slidesPerView: 1.25,
+                    },
+                  }}
+                  className="albumBox"
+                >
                   {jobDetail.companyPhoto && jobDetail.companyPhoto.map((photo, index) => (
-                    <img key={index} src={photo} alt="" />
+                    <SwiperSlide key={index}>
+                      <img src={photo} alt="" />
+                    </SwiperSlide>
                   ))}
-                </div>
+                </Swiper>
                 <div className="processBox">
                   <div className="process">
-                    <div className="dot active"></div>
+                    <div className="dot"></div>
                     <div className="dot"></div>
                     <div className="dot"></div>
                   </div>
