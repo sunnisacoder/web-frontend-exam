@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/web-frontend-exam/static/css/main.cf365193.css",
+    "main.js": "/web-frontend-exam/static/js/main.f3ae9b27.js",
+    "static/media/logo-mobile.svg": "/web-frontend-exam/static/media/logo-mobile.a96666f50c49c3b14b364d8458bb2f72.svg",
+    "static/media/logo.svg": "/web-frontend-exam/static/media/logo.a26e59aa68aa255c6f8ca9a6457b819c.svg",
+    "static/media/character.png": "/web-frontend-exam/static/media/character.55fce8219789d3b99e0e.png",
+    "static/media/background.png": "/web-frontend-exam/static/media/background.2662eec6f1c4edc9ac1f.png",
+    "static/media/character-mobile.png": "/web-frontend-exam/static/media/character-mobile.4a5c6d4d5fe8b0491f2b.png",
+    "static/media/character-back.png": "/web-frontend-exam/static/media/character-back.85c7a7365e4a659cd6a9.png",
+    "static/media/salaryImg.svg": "/web-frontend-exam/static/media/salaryImg.1509273e75f293db4deea613db53edfe.svg",
+    "static/media/educationImg.svg": "/web-frontend-exam/static/media/educationImg.bbabaa6bc3de9869b0ea99ca9b3ef034.svg",
+    "index.html": "/web-frontend-exam/index.html",
+    "static/media/titleImg.svg": "/web-frontend-exam/static/media/titleImg.07505c588e6e034b7c422d66d8f4aef2.svg",
+    "static/media/next.svg": "/web-frontend-exam/static/media/next.a928b8119b8f637496a5b17c6b295d1f.svg",
+    "static/media/prev.svg": "/web-frontend-exam/static/media/prev.47cbfc5d3c5dd0d051c73d75f331a66c.svg",
+    "main.cf365193.css.map": "/web-frontend-exam/static/css/main.cf365193.css.map",
+    "main.f3ae9b27.js.map": "/web-frontend-exam/static/js/main.f3ae9b27.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cf365193.css",
+    "static/js/main.f3ae9b27.js"
+  ]
+}
