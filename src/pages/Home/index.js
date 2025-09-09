@@ -21,12 +21,17 @@ function Home() {
   const [educationLevels, setEducationLevels] = useState([]);
   const [salaryLevels, setSalaryLevels] = useState([]);
   const [jobLists, setJobLists] = useState([]);
+  const [filteredJobs, setFilteredJobs] = useState([]);
   const [jobDetail, setJobDetail] = useState([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(6);
+  const [filters, setFilters] = useState({
+    companyName: '',
+    educationLevel: '',
+    salaryLevel: ''
+  });
   
-
   useEffect(() => {
     const updateItemsPerPage = () => {
       if (window.innerWidth <= 1080) {
@@ -54,8 +59,8 @@ function Home() {
     };
   }, []);
 
-  const totalPages = Math.ceil(jobLists.length / itemsPerPage); // 總頁數
-  const currentJobs = jobLists.slice(
+  const totalPages = Math.ceil(filteredJobs.length / itemsPerPage); // 總頁數
+  const currentJobs = filteredJobs.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -105,9 +110,28 @@ function Home() {
       .then(result => {
         // result.data 職缺陣列
         setJobLists(result.data || []);
+        setFilteredJobs([]);
       })
       .catch(error => console.error('Error fetching job lists:', error));
   }, []);
+
+  const handleSearch = () => {
+    const filtered = jobLists.filter(job => {
+      const matchCompany = !filters.companyName || 
+        job.companyName.toLowerCase().includes(filters.companyName.toLowerCase());
+      
+      const matchEducation = !filters.educationLevel || 
+        job.educationLevels === parseInt(filters.educationLevel);
+      
+      const matchSalary = !filters.salaryLevel || 
+        job.salaryLevels === parseInt(filters.salaryLevel);
+
+      return matchCompany && matchEducation && matchSalary;
+    });
+    
+    setFilteredJobs(filtered);
+    setCurrentPage(1);
+  };
 
   const fetchJobDetail = (jobId) => {
     fetch(`/api/v1/jobs/${jobId}`)
@@ -158,10 +182,20 @@ function Home() {
             <h1>適合前端工程師的好工作</h1>
             <div className="filterBox">
                 <div className="inputBox">
-                    <input type="text" placeholder="請輸入公司名稱" />
+                    <input 
+                      type="text" 
+                      placeholder="請輸入公司名稱" 
+                      value={filters.companyName}
+                      onChange={(e) => setFilters(prev => ({ ...prev, companyName: e.target.value }))}
+                    />
                 </div>
                 <div className="selectBox">
-                  <select name="educationLevel" id="educationLevel">
+                  <select 
+                    name="educationLevel" 
+                    id="educationLevel"
+                    value={filters.educationLevel}
+                    onChange={(e) => setFilters(prev => ({ ...prev, educationLevel: e.target.value }))}
+                  >
                       <option value="">不限</option>
                       {educationLevels.map(level => (
                           <option key={level.id} value={level.id}>
@@ -171,7 +205,12 @@ function Home() {
                   </select>
                 </div>
                 <div className="selectBox">
-                  <select name="salaryLevel" id="salaryLevel">
+                  <select 
+                    name="salaryLevel" 
+                    id="salaryLevel"
+                    value={filters.salaryLevel}
+                    onChange={(e) => setFilters(prev => ({ ...prev, salaryLevel: e.target.value }))}
+                  >
                     <option value="">不限</option>
                     {salaryLevels.map(salary => (
                         <option key={salary.id} value={salary.id}>
@@ -180,10 +219,10 @@ function Home() {
                     ))}
                   </select>
                 </div>
-                <button>條件搜尋</button>
+                <button onClick={handleSearch}>條件搜尋</button>
             </div>
-            <div className="jobData" style={{ border: jobLists.length === 0 ? '1px solid #ccc' : 'none' }}>
-              {jobLists.length === 0 ? (
+            <div className="jobData" style={{ border: filteredJobs.length === 0 ? '1px solid #ccc' : 'none' }}>
+              {filteredJobs.length === 0 ? (
                 <p className="noData">無資料</p>
               ) : (
               <div className="jobList">
@@ -193,8 +232,8 @@ function Home() {
                       key={job.id}
                       companyName={job.companyName}
                       title={job.jobTitle}
-                      education={educationLevels.find(level => level.id === jobLists.educationLevels)?.label || '不限'}
-                      salary={salaryLevels.find(salary => salary.id === jobLists.salaryLevels)?.label || '不限'}
+                      education={educationLevels.find(level => level.id === job.educationLevels)?.label || '不限'}
+                      salary={salaryLevels.find(salary => salary.id === job.salaryLevels)?.label || '不限'}
                       description={job.preview}
                       onViewDetail={() => fetchJobDetail(job.id)}
                     />

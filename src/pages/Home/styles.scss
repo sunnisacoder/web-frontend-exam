@@ -39,7 +39,7 @@
         @media (max-width: 1080px) {
             right: 11px;
             top: 35.46vw; //133px
-        }   
+        }
         @media (max-width: 575px) {
             max-width: 137px;
         }
@@ -330,10 +330,14 @@
     }
     .jobData {
         width: 100%;
-        // max-width: 1336px;
         height: auto;
         min-height: 458px;
         border-radius: 4px;
+        &:has(.noData) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .noData {
             font-size: 16px;
             font-weight: 400;
@@ -435,6 +439,8 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    flex-wrap: wrap;
+    padding: 0 8px;
     li {
         display: flex;
         align-items: center;
@@ -452,6 +458,10 @@
         &.active {
             background-color: #e6e6e6;
         }
+
+        @media (max-width: 475px) {
+            gap: 12px;
+        }
     }
     .prev,
     .next {
@@ -463,6 +473,12 @@
         &.disabled {
             opacity: 0.3;
             cursor: not-allowed;
+        }
+        img {
+            @media (max-width: 375px) {
+                width: 16px;
+                height: 16px;
+            }
         }
     }
 }
